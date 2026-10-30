@@ -62,9 +62,51 @@
       </div>
     </section>
 
-    <section class="section" id="demo">
+    <section class="section demo" id="demo" aria-labelledby="demo-title" data-maze-demo>
       <div class="container">
-        <h2>Try one</h2>
+        <div class="section__head reveal">
+          <h2 id="demo-title">Try one</h2>
+          <p>Same maze, two algorithms. BFS floods, A* aims.</p>
+        </div>
+        <div class="demo__live">
+          <div class="demo__panels">
+            <div class="panel" data-panel="bfs">
+              <div class="panel__head">
+                <h3>BFS</h3>
+                <span class="panel__status" data-status aria-live="polite">ready</span>
+              </div>
+              <canvas width="410" height="250" role="img" aria-label="Breadth-first search exploring the maze"></canvas>
+              <dl class="panel__stats">
+                <div><dt>Nodes explored</dt><dd data-explored>0</dd></div>
+                <div><dt>Path length</dt><dd data-path>&ndash;</dd></div>
+              </dl>
+            </div>
+            <div class="panel" data-panel="astar">
+              <div class="panel__head">
+                <h3>A*</h3>
+                <span class="panel__status" data-status aria-live="polite">ready</span>
+              </div>
+              <canvas width="410" height="250" role="img" aria-label="A* search exploring the maze"></canvas>
+              <dl class="panel__stats">
+                <div><dt>Nodes explored</dt><dd data-explored>0</dd></div>
+                <div><dt>Path length</dt><dd data-path>&ndash;</dd></div>
+              </dl>
+            </div>
+          </div>
+          <div class="demo__controls">
+            <button class="btn btn--primary btn--small" type="button" data-action="race" disabled>Race</button>
+            <button class="btn btn--ghost btn--small" type="button" data-action="new">New maze</button>
+            <button class="btn btn--ghost btn--small" type="button" data-action="reset" disabled>Reset</button>
+            <label>Loops
+              <input type="range" min="0" max="100" value="15" step="5" data-braid aria-label="Loops: fraction of inner walls removed">
+              <output data-braid-value>15%</output>
+            </label>
+          </div>
+        </div>
+        <div class="demo__fallback">
+          <img src="assets/maze-race.gif" alt="BFS and A* racing through the same maze: BFS floods most of it while A* heads for the goal" width="672" height="200" loading="lazy">
+          <p class="demo__caption">The live demo needs a wider screen. This is the same race, recorded.</p>
+        </div>
       </div>
     </section>
 
@@ -227,5 +269,6 @@
   </footer>
 
   <script src="script.js" defer></script>
+  <script src="demos/maze-race.js" defer></script>
 </body>
 </html>
