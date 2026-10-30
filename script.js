@@ -177,4 +177,23 @@
   fetchRepos().then(renderGitHub).catch(() => {
     if (ghNote) ghNote.textContent = 'Live stats are unavailable right now. Everything is on my GitHub profile.';
   });
+
+  /* ----- Scroll reveals -------------------------------------------------- */
+  // A subtle fade-up the first time a block scrolls into view. Skipped
+  // entirely when the visitor prefers reduced motion.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const revealTargets = $$('.reveal');
+
+  if (reduceMotion.matches || !('IntersectionObserver' in window)) {
+    revealTargets.forEach((el) => el.classList.add('is-visible'));
+  } else {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+    revealTargets.forEach((el) => revealObserver.observe(el));
+  }
 })();

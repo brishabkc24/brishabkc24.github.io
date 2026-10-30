@@ -769,3 +769,57 @@ button {
     gap: 4px;
   }
 }
+
+/* ----- Scroll reveals --------------------------------------------------- */
+/* Gated on html.js so nothing is hidden when the script does not run. The
+   hidden state is only applied before the element is seen, so a card's hover
+   lift still works afterwards. */
+.js .reveal {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js .reveal:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.grid > .reveal:nth-child(2),
+.cols > .reveal:nth-child(2) {
+  --reveal-delay: 90ms;
+}
+
+.grid > .reveal:nth-child(3),
+.cols > .reveal:nth-child(3) {
+  --reveal-delay: 180ms;
+}
+
+.grid > .reveal:nth-child(4) {
+  --reveal-delay: 270ms;
+}
+
+/* ----- Reduced motion --------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .js .reveal:not(.is-visible) {
+    opacity: 1;
+    transform: none;
+  }
+
+  .btn:hover,
+  .card:hover {
+    transform: none;
+  }
+}
