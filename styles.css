@@ -28,6 +28,21 @@
   color-scheme: dark;
 }
 
+:root[data-theme="light"] {
+  --bg: #f7f9fb;
+  --surface: #ffffff;
+  --surface-2: #eef2f6;
+  --border: #d9e0e8;
+  --text: #16202b;
+  --muted: #5b6675;
+  --accent: #14b8a6;
+  --accent-text: #0f766e;
+  --accent-contrast: #06201c;
+  --shadow: 0 12px 32px rgba(16, 24, 40, 0.12);
+
+  color-scheme: light;
+}
+
 /* ----- Base ------------------------------------------------------------- */
 *,
 *::before,
@@ -248,6 +263,19 @@ button {
 .icon-btn svg {
   width: 20px;
   height: 20px;
+}
+
+/* Sun shows in dark mode (click for light), moon shows in light mode. */
+.theme-toggle .icon-moon {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-toggle .icon-moon {
+  display: block;
 }
 
 .nav__toggle {
