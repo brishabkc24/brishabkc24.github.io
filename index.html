@@ -5,46 +5,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Brishab KC &mdash; Python, AI &amp; frontend projects</title>
   <meta name="description" content="Portfolio of Brishab KC, a BTech AI student and frontend developer in Kathmandu who builds classroom software and games that show how search, learning and logic actually work.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <nav aria-label="Primary">
-      <a href="#top">Brishab KC</a>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Primary">
+      <a class="brand" href="#top">Brishab KC</a>
+      <ul id="nav-links" class="nav__links">
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#github">GitHub</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav__tools">
+        <button class="icon-btn nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+          <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
     </nav>
   </header>
 
   <main id="main">
-    <section id="top">
-      <h1>I make algorithms visible.</h1>
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="container hero__inner">
+        <p class="hero__eyebrow">Brishab KC &middot; Kathmandu</p>
+        <h1 id="hero-title">I make algorithms visible.</h1>
+        <p class="hero__lede">BTech AI student at Purbanchal University and frontend developer. I build classroom software and games that show how search, learning and logic actually work.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="#projects">See projects</a>
+          <a class="btn btn--ghost" href="https://github.com/brishabkc24" target="_blank" rel="noopener">GitHub <span aria-hidden="true">&#8599;</span></a>
+        </div>
+      </div>
     </section>
 
-    <section id="demo">
-      <h2>Try one</h2>
+    <section class="section" id="demo">
+      <div class="container">
+        <h2>Try one</h2>
+      </div>
     </section>
 
-    <section id="projects">
-      <h2>Projects</h2>
+    <section class="section" id="projects">
+      <div class="container">
+        <h2>Projects</h2>
+      </div>
     </section>
 
-    <section id="skills">
-      <h2>Skills</h2>
+    <section class="section" id="skills">
+      <div class="container">
+        <h2>Skills</h2>
+      </div>
     </section>
 
-    <section id="github">
-      <h2>GitHub activity</h2>
+    <section class="section" id="github">
+      <div class="container">
+        <h2>GitHub activity</h2>
+      </div>
     </section>
 
-    <section id="about">
-      <h2>About</h2>
+    <section class="section" id="about">
+      <div class="container">
+        <h2>About</h2>
+      </div>
     </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
+    <section class="section" id="contact">
+      <div class="container">
+        <h2>Contact</h2>
+      </div>
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2026 Brishab KC</p>
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 Brishab KC</p>
+    </div>
   </footer>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
