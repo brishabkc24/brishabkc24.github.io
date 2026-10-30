@@ -75,6 +75,12 @@ img {
   height: auto;
 }
 
+/* The display rules above would otherwise cancel the hidden attribute, which
+   the game uses to clear a point after a piece moves or is captured. */
+[hidden] {
+  display: none !important;
+}
+
 h1,
 h2,
 h3 {
