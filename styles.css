@@ -1275,3 +1275,59 @@ button {
     font-size: 18px;
   }
 }
+
+/* ----- Social links ----------------------------------------------------- */
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.social a:hover {
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.social svg,
+.btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.social--icons {
+  margin: 0;
+  gap: 8px;
+}
+
+.social--icons a {
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.social--icons a:hover {
+  border-color: var(--accent);
+}
