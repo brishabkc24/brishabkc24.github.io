@@ -112,6 +112,14 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Links inside running text are underlined, so colour is not the only cue. */
+p a:not(.btn),
+figcaption a,
+li.repos__item a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -1006,6 +1014,8 @@ button {
 
 .bc__point img {
   position: absolute;
+  width: auto;
+  height: auto;
   max-width: 96%;
   max-height: 90%;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.45));
