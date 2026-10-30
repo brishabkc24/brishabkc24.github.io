@@ -142,9 +142,41 @@
       </div>
     </section>
 
-    <section class="section" id="skills">
+    <section class="section" id="skills" aria-labelledby="skills-title">
       <div class="container">
-        <h2>Skills</h2>
+        <div class="section__head">
+          <h2 id="skills-title">Skills</h2>
+          <p>Only things I can talk about in an interview. No percentage bars.</p>
+        </div>
+        <div class="cols">
+          <div class="col">
+            <h3>Languages</h3>
+            <ul>
+              <li>Python</li>
+              <li>JavaScript</li>
+              <li>TypeScript</li>
+              <li>HTML &amp; CSS</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h3>Frontend</h3>
+            <ul>
+              <li>Vanilla JS and the Canvas API</li>
+              <li>React and Next.js</li>
+              <li>Tailwind CSS</li>
+              <li>Responsive, accessible layouts</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h3>AI &amp; CS</h3>
+            <ul>
+              <li>Search algorithms: BFS, DFS, A*, minimax</li>
+              <li>NumPy and the basics of RAG</li>
+              <li>Git and GitHub</li>
+              <li>pytest and CI with GitHub Actions</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -154,22 +186,31 @@
       </div>
     </section>
 
-    <section class="section" id="about">
+    <section class="section" id="about" aria-labelledby="about-title">
       <div class="container">
-        <h2>About</h2>
+        <h2 id="about-title">About</h2>
+        <p class="about">I study artificial intelligence at Purbanchal University in Kathmandu. I build small, finished tools for classrooms: board games with an AI you can interrogate, and visualizers that show what a search algorithm is doing step by step. Right now I am learning how retrieval-augmented generation works by building one from scratch.</p>
       </div>
     </section>
 
-    <section class="section" id="contact">
+    <section class="section" id="contact" aria-labelledby="contact-title">
       <div class="container">
-        <h2>Contact</h2>
+        <div class="section__head">
+          <h2 id="contact-title">Contact</h2>
+          <p>Say hello about a project, an internship or a classroom tool you wish existed.</p>
+        </div>
+        <div class="actions">
+          <a class="btn btn--primary" href="mailto:brishabkc24@gmail.com">Email me</a>
+          <a class="btn btn--ghost" href="https://github.com/brishabkc24" target="_blank" rel="noopener">GitHub <span aria-hidden="true">&#8599;</span></a>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2026 Brishab KC</p>
+    <div class="container site-footer__inner">
+      <p>&copy; 2026 Brishab KC &middot; Built by hand with HTML, CSS and JS</p>
+      <p><a href="https://github.com/brishabkc24/brishabkc24.github.io" target="_blank" rel="noopener">Source <span aria-hidden="true">&#8599;</span></a></p>
     </div>
   </footer>
 
