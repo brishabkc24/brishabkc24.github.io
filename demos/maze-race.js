@@ -7,8 +7,9 @@
 
   const demo = document.querySelector('[data-maze-demo]');
   if (!demo || !window.HTMLCanvasElement) return;
-  // Under 480px the CSS swaps the live demo for a GIF, so there is nothing to run.
-  if (window.matchMedia('(max-width: 479px)').matches) return;
+  // Under 480px the CSS swaps the live demo for a GIF, so the demo only starts
+  // once the viewport is wide enough (see the end of this file).
+  const smallScreen = window.matchMedia('(max-width: 479px)');
 
   const OPEN = 0;
   const WALL = 1;
@@ -515,6 +516,7 @@
   });
 
   document.addEventListener('themechange', () => {
+    if (!grid) return;
     readColours();
     panels.forEach((panel) => panel.drawAll());
   });
@@ -522,13 +524,25 @@
   let resizeTimer = 0;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => panels.forEach((panel) => {
-      panel.fit();
-      panel.drawAll();
-    }), 120);
+    resizeTimer = setTimeout(() => {
+      if (!grid) return;
+      panels.forEach((panel) => {
+        panel.fit();
+        panel.drawAll();
+      });
+    }, 120);
   });
 
-  readColours();
-  braidValue.textContent = `${braidInput.value}%`;
-  build();
+  // Build the first maze as soon as the viewport is wide enough for the live
+  // demo: now, or later if the page loaded narrow (a rotated phone, a resized
+  // window).
+  const init = () => {
+    if (grid || smallScreen.matches) return;
+    readColours();
+    braidValue.textContent = `${braidInput.value}%`;
+    build();
+  };
+
+  init();
+  smallScreen.addEventListener('change', init);
 })();
