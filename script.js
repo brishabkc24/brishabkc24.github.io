@@ -86,4 +86,95 @@
     try { saved = localStorage.getItem('theme'); } catch (_) { /* ignore */ }
     if (!saved) applyTheme(event.matches ? 'light' : 'dark');
   });
+
+  /* ----- GitHub: live stats and star counts on the cards ------------------ */
+  // The page renders fully without this; it only adds numbers. Unauthenticated
+  // calls allow 60 requests an hour per visitor, and the response is cached in
+  // sessionStorage so a reload does not spend another one.
+  const GH_USER = 'brishabkc24';
+  const ghNote = $('#gh-note');
+  const number = new Intl.NumberFormat('en');
+  const STAR_ICON = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><polygon points="8,1 10.2,5.6 15.2,6.2 11.5,9.7 12.5,14.7 8,12.3 3.5,14.7 4.5,9.7 0.8,6.2 5.8,5.6"/></svg>';
+  const FORK_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="4" cy="3" r="1.6"/><circle cx="12" cy="3" r="1.6"/><circle cx="8" cy="13" r="1.6"/><path d="M4 4.6v1.4a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V4.6M8 8v3.4"/></svg>';
+
+  const setText = (selector, value) => {
+    const el = $(selector);
+    if (el) el.textContent = value;
+  };
+
+  const timeAgo = (iso) => {
+    const days = Math.round((Date.now() - new Date(iso).getTime()) / 864e5);
+    if (days <= 0) return 'today';
+    if (days === 1) return 'yesterday';
+    if (days < 30) return `${days} days ago`;
+    const months = Math.round(days / 30);
+    if (months < 12) return `${months} month${months === 1 ? '' : 's'} ago`;
+    const years = Math.round(days / 365);
+    return `${years} year${years === 1 ? '' : 's'} ago`;
+  };
+
+  async function fetchRepos() {
+    const key = `gh-repos:${GH_USER}`;
+    try {
+      const cached = sessionStorage.getItem(key);
+      if (cached) return JSON.parse(cached);
+    } catch (_) { /* storage unavailable */ }
+    const response = await fetch(
+      `https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`,
+      { headers: { Accept: 'application/vnd.github+json' } }
+    );
+    if (!response.ok) throw new Error(`GitHub API ${response.status}`);
+    const repos = await response.json();
+    try { sessionStorage.setItem(key, JSON.stringify(repos)); } catch (_) { /* ignore */ }
+    return repos;
+  }
+
+  function renderGitHub(allRepos) {
+    const repos = allRepos.filter((repo) => !repo.fork);
+    const stars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+    const forks = repos.reduce((sum, repo) => sum + repo.forks_count, 0);
+    setText('#stat-repos', number.format(repos.length));
+    setText('#stat-stars', number.format(stars));
+    setText('#stat-forks', number.format(forks));
+
+    $$('[data-repo]').forEach((el) => {
+      const repo = repos.find((r) => r.name.toLowerCase() === el.dataset.repo.toLowerCase());
+      if (!repo) return;
+      el.innerHTML = `${STAR_ICON}${number.format(repo.stargazers_count)}&nbsp;&nbsp;${FORK_ICON}${number.format(repo.forks_count)}`;
+      el.setAttribute('aria-label', `${repo.stargazers_count} stars, ${repo.forks_count} forks`);
+    });
+
+    const list = $('#recent-repos');
+    if (list) {
+      list.textContent = '';
+      repos
+        .slice()
+        .sort((a, b) => new Date(b.pushed_at) - new Date(a.pushed_at))
+        .slice(0, 3)
+        .forEach((repo) => {
+          const item = document.createElement('li');
+          const main = document.createElement('div');
+          main.className = 'repos__main';
+          const link = document.createElement('a');
+          link.href = repo.html_url;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = repo.name;
+          const desc = document.createElement('span');
+          desc.className = 'repos__desc';
+          desc.textContent = repo.description || '';
+          main.append(link, desc);
+          const time = document.createElement('time');
+          time.dateTime = repo.pushed_at;
+          time.textContent = `pushed ${timeAgo(repo.pushed_at)}`;
+          item.append(main, time);
+          list.append(item);
+        });
+    }
+    if (ghNote) ghNote.hidden = true;
+  }
+
+  fetchRepos().then(renderGitHub).catch(() => {
+    if (ghNote) ghNote.textContent = 'Live stats are unavailable right now. Everything is on my GitHub profile.';
+  });
 })();

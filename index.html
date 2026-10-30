@@ -180,9 +180,20 @@
       </div>
     </section>
 
-    <section class="section" id="github">
+    <section class="section" id="github" aria-labelledby="github-title">
       <div class="container">
-        <h2>GitHub activity</h2>
+        <div class="section__head">
+          <h2 id="github-title">GitHub activity</h2>
+          <p>Pulled live from the GitHub API when this page loads.</p>
+        </div>
+        <ul class="stats">
+          <li class="stat"><span class="stat__value" id="stat-repos">&ndash;</span><span class="stat__label">Public repos</span></li>
+          <li class="stat"><span class="stat__value" id="stat-stars">&ndash;</span><span class="stat__label">Stars</span></li>
+          <li class="stat"><span class="stat__value" id="stat-forks">&ndash;</span><span class="stat__label">Forks</span></li>
+        </ul>
+        <h3 class="repos__title">Recently pushed</h3>
+        <ul class="repos" id="recent-repos" aria-live="polite"></ul>
+        <p class="gh-note" id="gh-note">Loading from the GitHub API&hellip; If it does not load, everything is on <a href="https://github.com/brishabkc24" target="_blank" rel="noopener">my GitHub profile</a>.</p>
       </div>
     </section>
 
