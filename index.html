@@ -129,6 +129,76 @@
       </div>
     </section>
 
+    <section class="section baghchal" id="baghchal" aria-labelledby="baghchal-title" data-bagh-chal>
+      <div class="container">
+        <div class="section__head reveal">
+          <h2 id="baghchal-title">Play Bagh Chal</h2>
+          <p>The traditional Nepali Tigers-and-Goats game, in your browser. The rules engine and the minimax AI are my desktop game's Python, ported line for line.</p>
+        </div>
+        <div class="bc">
+          <div class="bc__board-wrap reveal">
+            <div class="bc__board">
+              <svg class="bc__lines" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+                <g fill="none" stroke="#fff8dc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M40 40H360M40 120H360M40 200H360M40 280H360M40 360H360"/>
+                  <path d="M40 40V360M120 40V360M200 40V360M280 40V360M360 40V360"/>
+                  <path d="M40 40L360 360M360 40L40 360"/>
+                  <path d="M200 40L360 200L200 360L40 200Z"/>
+                </g>
+              </svg>
+              <div class="bc__points" data-points role="group" aria-label="Bagh Chal board, 5 by 5 points"></div>
+              <div class="bc__banner" data-banner hidden></div>
+            </div>
+          </div>
+          <div class="bc__panel reveal">
+            <p class="bc__status" data-status aria-live="polite">Goats to place</p>
+            <dl class="bc__counts">
+              <div><dt>Goats placed</dt><dd data-placed>0 / 20</dd></div>
+              <div><dt>Goats captured</dt><dd data-captured>0 / 5</dd></div>
+              <div><dt>Tigers' score</dt><dd data-score>0</dd></div>
+            </dl>
+            <div class="bc__options">
+              <fieldset class="bc__choice">
+                <legend>You play</legend>
+                <label><input type="radio" name="bc-side" value="goat" checked> Goats</label>
+                <label><input type="radio" name="bc-side" value="tiger"> Tigers</label>
+                <label><input type="radio" name="bc-side" value="both"> Two players</label>
+              </fieldset>
+              <fieldset class="bc__choice">
+                <legend>AI level</legend>
+                <label><input type="radio" name="bc-level" value="2"> Easy</label>
+                <label><input type="radio" name="bc-level" value="4" checked> Medium</label>
+                <label><input type="radio" name="bc-level" value="6"> Hard</label>
+              </fieldset>
+            </div>
+            <div class="bc__actions">
+              <button class="btn btn--primary btn--small" type="button" data-action="new">New game</button>
+              <button class="btn btn--ghost btn--small" type="button" data-action="undo">Undo</button>
+              <button class="btn btn--ghost btn--small" type="button" data-action="hint">Hint</button>
+            </div>
+            <details class="bc__details">
+              <summary>How the AI scores this position</summary>
+              <table class="bc__table">
+                <thead><tr><th scope="col">Term</th><th scope="col">Count</th><th scope="col">Weight</th><th scope="col">Points</th></tr></thead>
+                <tbody data-breakdown></tbody>
+                <tfoot><tr><th scope="row" colspan="3">Total (positive favours tigers)</th><td data-total>0</td></tr></tfoot>
+              </table>
+              <p class="bc__nodes" data-nodes>Make a move and the AI will show how many positions it searched.</p>
+            </details>
+            <details class="bc__details">
+              <summary>How to play</summary>
+              <ul>
+                <li>Goats go first and place all 20 goats, one per turn. Tigers can move from the start.</li>
+                <li>Pieces move one step along a line. A tiger captures by jumping over a goat to the empty point beyond.</li>
+                <li>Tigers win by capturing 5 goats. Goats win by trapping all 4 tigers. The same position three times is a draw.</li>
+              </ul>
+            </details>
+            <p class="bc__links"><a href="https://github.com/brishabkc24/Bagh-Chal" target="_blank" rel="noopener">Source on GitHub</a> &middot; <a href="https://github.com/brishabkc24/Bagh-Chal/releases/latest" target="_blank" rel="noopener">Windows .exe</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="projects" aria-labelledby="projects-title">
       <div class="container">
         <div class="section__head reveal">
@@ -151,6 +221,7 @@
               </ul>
               <div class="card__links">
                 <a href="https://github.com/brishabkc24/Bagh-Chal" target="_blank" rel="noopener">Repo</a>
+                <a href="#baghchal">Play here</a>
                 <a href="https://github.com/brishabkc24/Bagh-Chal/releases/latest" target="_blank" rel="noopener">Download .exe</a>
               </div>
             </div>
@@ -289,5 +360,6 @@
 
   <script src="script.js" defer></script>
   <script src="demos/maze-race.js" defer></script>
+  <script src="demos/bagh-chal.js" defer></script>
 </body>
 </html>
