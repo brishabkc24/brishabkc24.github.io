@@ -96,12 +96,16 @@
           <div class="demo__controls">
             <button class="btn btn--primary btn--small" type="button" data-action="race">Race</button>
             <button class="btn btn--ghost btn--small" type="button" data-action="new">New maze</button>
-            <button class="btn btn--ghost btn--small" type="button" data-action="reset" disabled>Reset</button>
+            <button class="btn btn--ghost btn--small" type="button" data-action="reset">Reset</button>
             <label>Loops
               <input type="range" min="0" max="100" value="15" step="5" data-braid aria-label="Loops: fraction of inner walls removed">
               <output data-braid-value>15%</output>
             </label>
+            <label>Speed
+              <input type="range" min="1" max="40" value="8" data-speed aria-label="Speed: search steps per frame">
+            </label>
           </div>
+          <p class="demo__summary" data-summary aria-live="polite"></p>
         </div>
         <div class="demo__fallback">
           <img src="assets/maze-race.gif" alt="BFS and A* racing through the same maze: BFS floods most of it while A* heads for the goal" width="672" height="200" loading="lazy">

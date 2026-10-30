@@ -170,7 +170,107 @@
     yield ['done', null];
   }
 
-  const ALGORITHMS = { bfs };
+  /* ----- Best-first family: the engine behind A* ------------------------- */
+  // A binary heap keyed on (f, order). Entries with equal f pop in the order
+  // they were pushed, so ties break first-in-first-out like Python's heapq
+  // with a counter, and nodes themselves are never compared.
+  class MinHeap {
+    constructor() { this.items = []; }
+    get size() { return this.items.length; }
+
+    less(i, j) {
+      const a = this.items[i];
+      const b = this.items[j];
+      return a.f < b.f || (a.f === b.f && a.order < b.order);
+    }
+
+    swap(i, j) {
+      const t = this.items[i];
+      this.items[i] = this.items[j];
+      this.items[j] = t;
+    }
+
+    push(f, order, node) {
+      const items = this.items;
+      items.push({ f, order, node });
+      let i = items.length - 1;
+      while (i > 0) {
+        const p = (i - 1) >> 1;
+        if (!this.less(i, p)) break;
+        this.swap(i, p);
+        i = p;
+      }
+    }
+
+    pop() {
+      const items = this.items;
+      const top = items[0];
+      const last = items.pop();
+      if (items.length) {
+        items[0] = last;
+        let i = 0;
+        for (;;) {
+          const l = 2 * i + 1;
+          const r = l + 1;
+          let m = i;
+          if (l < items.length && this.less(l, m)) m = l;
+          if (r < items.length && this.less(r, m)) m = r;
+          if (m === i) break;
+          this.swap(i, m);
+          i = m;
+        }
+      }
+      return top.node;
+    }
+  }
+
+  const manhattan = (grid, a, b) =>
+    Math.abs(grid.row(a) - grid.row(b)) + Math.abs(grid.col(a) - grid.col(b));
+
+  // Pops the frontier node with the lowest f = gWeight*g + hWeight*h:
+  // (1, 0) is Dijkstra, (1, 1) is A*, (0, 1) is Greedy. A closed set is
+  // checked on pop; a node found again with a better g is pushed again and
+  // the stale entry is skipped later (lazy deletion).
+  function* bestFirst(grid, gWeight, hWeight, heuristic) {
+    const { start, goal } = grid;
+    let order = 0;
+    const g = new Float64Array(grid.size).fill(Infinity);
+    const parent = new Int32Array(grid.size).fill(-2);
+    const closed = new Uint8Array(grid.size);
+    const heap = new MinHeap();
+    g[start] = 0;
+    parent[start] = -1;
+    heap.push(hWeight * heuristic(grid, start, goal), order++, start);
+    yield ['discover', start];
+    while (heap.size) {
+      const node = heap.pop();
+      if (closed[node]) continue;
+      closed[node] = 1;
+      yield ['visit', node];
+      if (node === goal) {
+        yield ['done', reconstruct(parent, goal)];
+        return;
+      }
+      for (const nb of grid.neighbors(node)) {
+        if (closed[nb]) continue;
+        if (gWeight === 0 && g[nb] !== Infinity) continue; // greedy keeps the first parent
+        const ng = g[node] + 1; // unit step cost
+        if (ng < g[nb]) {
+          g[nb] = ng;
+          parent[nb] = node;
+          heap.push(gWeight * ng + hWeight * heuristic(grid, nb, goal), order++, nb);
+          yield ['discover', nb];
+        }
+      }
+    }
+    yield ['done', null];
+  }
+
+  // A*: distance so far plus an admissible estimate to the goal. Optimal, and
+  // it explores far fewer cells than BFS.
+  const astar = (grid) => bestFirst(grid, 1, 1, manhattan);
+
+  const ALGORITHMS = { bfs, astar };
 
   /* ----- A panel: one canvas showing one algorithm's progress ------------ */
   const STATE = { open: 0, wall: 1, frontier: 2, explored: 3, path: 4 };
@@ -294,6 +394,9 @@
   const braidValue = demo.querySelector('[data-braid-value]');
   const newButton = demo.querySelector('[data-action="new"]');
   const raceButton = demo.querySelector('[data-action="race"]');
+  const resetButton = demo.querySelector('[data-action="reset"]');
+  const speedInput = demo.querySelector('[data-speed]');
+  const summary = demo.querySelector('[data-summary]');
 
   let seed = (Math.random() * 2 ** 31) | 0;
   let grid = null;
@@ -301,7 +404,25 @@
   let raf = 0;
 
   const braidFraction = () => Number(braidInput.value) / 100;
-  const stepsPerFrame = () => 8;
+  const stepsPerFrame = () => Number(speedInput.value) || 8;
+
+  const panelName = (panel) => panel.el.querySelector('h3').textContent;
+
+  // One line comparing the two runners once both have finished.
+  const summarise = () => {
+    const [a, b] = racers();
+    if (!a || !b) return;
+    if (!a.path || !b.path) {
+      summary.textContent = 'No path this time. Try a new maze.';
+      return;
+    }
+    const la = a.path.length - 1;
+    const lb = b.path.length - 1;
+    const paths = la === lb
+      ? `Both paths are ${la} steps.`
+      : `${panelName(la < lb ? a : b)} found the shorter path.`;
+    summary.textContent = `${panelName(b)} checked ${b.visited} cells to ${panelName(a)}'s ${a.visited}. ${paths}`;
+  };
 
   /* ----- The race: every runner advances the same number of events a frame */
   const racers = () => panels.filter((panel) => panel.algo);
@@ -322,6 +443,7 @@
       stopRace();
       raceButton.textContent = 'Race';
       raceButton.disabled = true;
+      summarise();
       return;
     }
     raf = requestAnimationFrame(frame);
@@ -343,7 +465,43 @@
     panels.forEach((panel) => panel.setGrid(grid));
     raceButton.textContent = 'Race';
     raceButton.disabled = racers().length === 0;
+    summary.textContent = '';
   };
+
+  // Reset clears the search but keeps the maze.
+  resetButton.addEventListener('click', () => {
+    stopRace();
+    panels.forEach((panel) => panel.setGrid(grid));
+    raceButton.textContent = 'Race';
+    raceButton.disabled = false;
+    summary.textContent = '';
+  });
+
+  // Pause while the demo is scrolled out of view or the tab is hidden, and
+  // pick up where it left off when it is back. A pause the visitor asked for
+  // stays a pause.
+  let inView = true;
+  let pausedByView = false;
+  const handleVisible = (visible) => {
+    if (!visible && running) {
+      stopRace();
+      pausedByView = true;
+    } else if (visible && pausedByView) {
+      pausedByView = false;
+      startRace();
+    }
+  };
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        inView = entry.isIntersecting;
+        handleVisible(inView && !document.hidden);
+      });
+    }, { threshold: 0.1 }).observe(demo);
+  }
+
+  document.addEventListener('visibilitychange', () => handleVisible(inView && !document.hidden));
 
   newButton.addEventListener('click', () => {
     seed = (Math.random() * 2 ** 31) | 0;
