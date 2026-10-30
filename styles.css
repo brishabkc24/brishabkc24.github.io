@@ -549,49 +549,6 @@ button {
   color: var(--text);
 }
 
-/* ----- Skills ----------------------------------------------------------- */
-.cols {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.col {
-  padding: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-}
-
-.col h3 {
-  margin-bottom: 14px;
-}
-
-.col ul {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.col li {
-  position: relative;
-  padding-left: 18px;
-  color: var(--muted);
-}
-
-.col li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.7em;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--accent);
-}
-
 /* ----- About ------------------------------------------------------------ */
 .about {
   max-width: 720px;
@@ -651,9 +608,6 @@ button {
     margin-bottom: 28px;
   }
 
-  .cols {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 480px) {
@@ -784,13 +738,11 @@ button {
   transform: translateY(16px);
 }
 
-.grid > .reveal:nth-child(2),
-.cols > .reveal:nth-child(2) {
+.grid > .reveal:nth-child(2) {
   --reveal-delay: 90ms;
 }
 
-.grid > .reveal:nth-child(3),
-.cols > .reveal:nth-child(3) {
+.grid > .reveal:nth-child(3) {
   --reveal-delay: 180ms;
 }
 
@@ -1330,4 +1282,236 @@ button {
 
 .social--icons a:hover {
   border-color: var(--accent);
+}
+
+/* ----- Section templates ------------------------------------------------ */
+/* Alternating bands, an editorial eyebrow above each heading, and a few
+   layouts that differ from the card grid so the page does not repeat itself. */
+.section--alt {
+  background: var(--surface);
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent-text);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.baghchal {
+  background: linear-gradient(180deg, var(--bg), color-mix(in srgb, #f5b942 7%, var(--bg)));
+}
+
+/* Projects: a bento grid where the first card is wide and horizontal. */
+.card--wide {
+  grid-column: span 2;
+  flex-direction: row;
+}
+
+.card--wide .card__media {
+  flex: 0 0 52%;
+  aspect-ratio: auto;
+  border-bottom: 0;
+  border-right: 1px solid var(--border);
+}
+
+.grid--bento .card--next {
+  grid-column: span 2;
+}
+
+/* Skills: label rows with chips instead of three identical cards. */
+.skills {
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.skills__row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px 24px;
+  align-items: start;
+  padding: 20px 24px;
+}
+
+.skills__row + .skills__row {
+  border-top: 1px solid var(--border);
+}
+
+.skills dt {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  padding-top: 4px;
+}
+
+.skills dd {
+  margin: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 14px;
+}
+
+/* GitHub: stacked stat tiles beside the contribution graph and recent repos. */
+.gh {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.stats--stack {
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 0;
+}
+
+.gh__main {
+  min-width: 0;
+}
+
+.gh-chart {
+  margin: 0 0 24px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.gh-chart img {
+  width: 100%;
+  height: auto;
+}
+
+:root[data-theme="dark"] .gh-chart img {
+  filter: invert(0.92) hue-rotate(180deg) saturate(1.4);
+}
+
+.gh-chart figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* About: a profile card with the avatar beside the text. */
+.profile {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.profile__side {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+.profile__avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  box-shadow: var(--shadow);
+  object-fit: cover;
+}
+
+.profile__body h2 {
+  margin-bottom: 12px;
+}
+
+.profile__now {
+  margin: 0;
+  padding: 14px 18px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  background: var(--surface-2);
+  font-size: 16px;
+}
+
+/* Contact: one glowing call-to-action panel. */
+.cta {
+  padding: 48px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  border-radius: 20px;
+  background:
+    radial-gradient(600px 240px at 0% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%),
+    var(--surface);
+}
+
+.cta h2 {
+  max-width: 640px;
+}
+
+.cta__text {
+  max-width: 560px;
+  margin-bottom: 28px;
+  color: var(--muted);
+}
+
+@media (max-width: 1100px) {
+  .card--wide {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .card--wide {
+    grid-column: span 1;
+    flex-direction: column;
+  }
+
+  .card--wide .card__media {
+    flex: none;
+    aspect-ratio: 16 / 10;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .grid--bento .card--next {
+    grid-column: span 1;
+  }
+
+  .skills__row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 16px 18px;
+  }
+
+  .gh,
+  .profile {
+    grid-template-columns: 1fr;
+  }
+
+  .stats--stack {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cta {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats--stack {
+    grid-template-columns: 1fr;
+  }
 }
