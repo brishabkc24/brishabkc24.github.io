@@ -129,6 +129,49 @@
     return count;
   }
 
+  /* ----- Search algorithms, as generators -------------------------------- */
+  // Every algorithm yields events, exactly like the Python version:
+  //   ['discover', node]  the node joined the frontier
+  //   ['visit', node]     the node was taken off the frontier and expanded
+  //   ['done', path]      the search ended; path is start..goal or null
+  // The race advances each generator a few events per animation frame.
+
+  const reconstruct = (parent, goal) => {
+    const path = [];
+    for (let node = goal; node !== -1; node = parent[node]) path.push(node);
+    path.reverse();
+    return path;
+  };
+
+  // Breadth-first search: a FIFO queue, so the first time the goal is reached
+  // it is by a shortest path. Explores in rings around the start.
+  function* bfs(grid) {
+    const { start, goal } = grid;
+    const parent = new Int32Array(grid.size).fill(-2); // -2 unseen, -1 root
+    parent[start] = -1;
+    const queue = [start];
+    let head = 0;
+    yield ['discover', start];
+    while (head < queue.length) {
+      const node = queue[head++];
+      yield ['visit', node];
+      if (node === goal) {
+        yield ['done', reconstruct(parent, goal)];
+        return;
+      }
+      for (const nb of grid.neighbors(node)) {
+        if (parent[nb] === -2) {
+          parent[nb] = node;
+          queue.push(nb);
+          yield ['discover', nb];
+        }
+      }
+    }
+    yield ['done', null];
+  }
+
+  const ALGORITHMS = { bfs };
+
   /* ----- A panel: one canvas showing one algorithm's progress ------------ */
   const STATE = { open: 0, wall: 1, frontier: 2, explored: 3, path: 4 };
   const colours = {};
@@ -148,8 +191,11 @@
       this.exploredEl = el.querySelector('[data-explored]');
       this.pathEl = el.querySelector('[data-path]');
       this.statusEl = el.querySelector('[data-status]');
+      this.algo = ALGORITHMS[el.dataset.panel] || null;
       this.px = 8;
       this.grid = null;
+      this.gen = null;
+      this.done = false;
     }
 
     setGrid(grid) {
@@ -157,9 +203,51 @@
       this.state = new Uint8Array(grid.cells);
       this.visited = 0;
       this.path = null;
+      this.gen = null;
+      this.done = false;
       this.fit();
       this.drawAll();
-      this.showStats('ready');
+      this.showStats(this.algo ? 'ready' : 'coming soon');
+    }
+
+    begin() {
+      this.gen = this.algo(this.grid);
+      this.done = false;
+      this.showStats('searching…');
+    }
+
+    // Paint one event. Frontier cells turn amber, visited cells teal-green,
+    // and the final path bright teal.
+    apply(event) {
+      const [kind, payload] = event;
+      if (kind === 'discover') {
+        if (this.state[payload] === STATE.open) {
+          this.state[payload] = STATE.frontier;
+          this.drawCell(payload);
+        }
+      } else if (kind === 'visit') {
+        this.state[payload] = STATE.explored;
+        this.visited += 1;
+        this.drawCell(payload);
+      } else if (kind === 'done') {
+        this.done = true;
+        this.path = payload;
+        if (payload) {
+          for (const id of payload) {
+            this.state[id] = STATE.path;
+            this.drawCell(id);
+          }
+        }
+        this.showStats(payload ? 'path found' : 'no path');
+      }
+    }
+
+    // Advance up to k events.
+    step(k) {
+      for (let i = 0; i < k && !this.done; i++) {
+        const next = this.gen.next();
+        this.apply(next.done ? ['done', null] : next.value);
+      }
     }
 
     // Size the backing store to the canvas's on-screen width, with a whole
@@ -205,15 +293,56 @@
   const braidInput = demo.querySelector('[data-braid]');
   const braidValue = demo.querySelector('[data-braid-value]');
   const newButton = demo.querySelector('[data-action="new"]');
+  const raceButton = demo.querySelector('[data-action="race"]');
 
   let seed = (Math.random() * 2 ** 31) | 0;
   let grid = null;
+  let running = false;
+  let raf = 0;
 
   const braidFraction = () => Number(braidInput.value) / 100;
+  const stepsPerFrame = () => 8;
+
+  /* ----- The race: every runner advances the same number of events a frame */
+  const racers = () => panels.filter((panel) => panel.algo);
+  const finished = () => racers().every((panel) => panel.done);
+
+  const stopRace = () => {
+    running = false;
+    cancelAnimationFrame(raf);
+    raceButton.textContent = racers().some((panel) => panel.gen) ? 'Resume' : 'Race';
+  };
+
+  const frame = () => {
+    if (!running) return;
+    const k = stepsPerFrame();
+    for (const panel of racers()) if (!panel.done) panel.step(k);
+    racers().forEach((panel) => panel.showStats());
+    if (finished()) {
+      stopRace();
+      raceButton.textContent = 'Race';
+      raceButton.disabled = true;
+      return;
+    }
+    raf = requestAnimationFrame(frame);
+  };
+
+  const startRace = () => {
+    if (finished()) return;
+    racers().forEach((panel) => { if (!panel.gen) panel.begin(); });
+    running = true;
+    raceButton.textContent = 'Pause';
+    raf = requestAnimationFrame(frame);
+  };
+
+  raceButton.addEventListener('click', () => (running ? stopRace() : startRace()));
 
   const build = () => {
+    stopRace();
     grid = generate(COLS, ROWS, seed, braidFraction());
     panels.forEach((panel) => panel.setGrid(grid));
+    raceButton.textContent = 'Race';
+    raceButton.disabled = racers().length === 0;
   };
 
   newButton.addEventListener('click', () => {
