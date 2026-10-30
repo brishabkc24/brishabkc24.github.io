@@ -67,9 +67,78 @@
       </div>
     </section>
 
-    <section class="section" id="projects">
+    <section class="section" id="projects" aria-labelledby="projects-title">
       <div class="container">
-        <h2>Projects</h2>
+        <div class="section__head">
+          <h2 id="projects-title">Projects</h2>
+          <p>Things I built to understand something, then kept polishing. Each one runs, has a README, and most have tests.</p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <div class="card__media">
+              <img src="assets/bagh-chal.gif" alt="Bagh Chal in play: tigers and goats on the board, with the AI's next move being explained" width="560" height="389" loading="lazy">
+            </div>
+            <div class="card__body">
+              <div class="card__title">
+                <h3>Bagh Chal</h3>
+                <span class="card__meta" data-repo="Bagh-Chal"></span>
+              </div>
+              <p>The traditional Nepali Tigers-and-Goats game with a minimax AI (alpha-beta pruning), three difficulty levels, hints, and an &ldquo;Explain AI math&rdquo; window.</p>
+              <ul class="tags" aria-label="Built with">
+                <li>Python</li><li>Tkinter</li><li>Minimax</li><li>pytest</li><li>GitHub Actions</li>
+              </ul>
+              <div class="card__links">
+                <a href="https://github.com/brishabkc24/Bagh-Chal" target="_blank" rel="noopener">Repo</a>
+                <a href="https://github.com/brishabkc24/Bagh-Chal/releases/latest" target="_blank" rel="noopener">Download .exe</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__media">
+              <img src="assets/maze-visualizer.webp" alt="Six search algorithms racing through the same maze side by side, each in its own colour, with a scoreboard underneath" width="1200" height="702" loading="lazy">
+            </div>
+            <div class="card__body">
+              <div class="card__title">
+                <h3>Maze Pathfinding Visualizer</h3>
+                <span class="card__meta" data-repo="maze-pathfinding-visualizer"></span>
+              </div>
+              <p>Watch BFS, DFS, Dijkstra and A* race through the same maze side by side. Built for the classroom: 26 mazes, a scoreboard, and a &ldquo;How it works&rdquo; page.</p>
+              <ul class="tags" aria-label="Built with">
+                <li>Python</li><li>Tkinter</li><li>A*</li><li>BFS</li><li>pytest</li>
+              </ul>
+              <div class="card__links">
+                <a href="https://github.com/brishabkc24/maze-pathfinding-visualizer" target="_blank" rel="noopener">Repo</a>
+                <a href="#demo">Try it above</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card__media">
+              <img src="assets/math-tug-arena.svg" alt="Math Tug Arena: a multiplication question on screen and a rope pulled toward the team that answered first" width="800" height="500" loading="lazy">
+            </div>
+            <div class="card__body">
+              <div class="card__title">
+                <h3>Math Tug Arena</h3>
+                <span class="card__meta" data-repo="math-tug-arena"></span>
+              </div>
+              <p>Classroom tug-of-war math game for two teams. Answer first and the rope moves your way.</p>
+              <ul class="tags" aria-label="Built with">
+                <li>Vanilla JS</li><li>Canvas</li><li>HTML/CSS</li>
+              </ul>
+              <div class="card__links">
+                <a href="https://github.com/brishabkc24/math-tug-arena" target="_blank" rel="noopener">Repo</a>
+                <a href="https://brishabkc24.github.io/math-tug-arena/" target="_blank" rel="noopener">Play</a>
+              </div>
+            </div>
+          </article>
+
+          <a class="card card--next" href="https://github.com/brishabkc24" target="_blank" rel="noopener">
+            <span class="card--next__big">Next up <span aria-hidden="true">&rarr;</span></span>
+            <span>New repos show up here as they land. Follow along on GitHub.</span>
+          </a>
+        </div>
       </div>
     </section>
 

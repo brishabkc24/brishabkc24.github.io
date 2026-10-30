@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500" role="img" aria-labelledby="t">
+  <title id="t">Math Tug Arena: two teams pull a rope by answering sums</title>
+  <rect width="800" height="500" fill="#121821"/>
+  <rect x="40" y="40" width="720" height="420" rx="18" fill="#0b0f14" stroke="#243040"/>
+  <text x="400" y="118" text-anchor="middle" font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="46" font-weight="700" fill="#e6edf3">7 &#215; 8 = ?</text>
+  <rect x="300" y="146" width="200" height="54" rx="10" fill="#1a222e" stroke="#243040"/>
+  <text x="400" y="183" text-anchor="middle" font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="30" fill="#9aa4b2">56</text>
+  <line x1="120" y1="300" x2="680" y2="300" stroke="#9aa4b2" stroke-width="6" stroke-linecap="round" stroke-dasharray="14 10"/>
+  <line x1="400" y1="250" x2="400" y2="350" stroke="#243040" stroke-width="3" stroke-dasharray="6 6"/>
+  <circle cx="470" cy="300" r="22" fill="#2dd4bf"/>
+  <g font-family="Segoe UI, Inter, system-ui, sans-serif" font-size="24" font-weight="600">
+    <text x="130" y="390" fill="#2dd4bf">Team A &#183; 7</text>
+    <text x="670" y="390" fill="#f5b942" text-anchor="end">Team B &#183; 5</text>
+  </g>
+  <rect x="120" y="268" width="36" height="64" rx="8" fill="#2dd4bf" opacity="0.9"/>
+  <rect x="644" y="268" width="36" height="64" rx="8" fill="#f5b942" opacity="0.9"/>
+</svg>
