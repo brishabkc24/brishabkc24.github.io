@@ -543,6 +543,18 @@
     build();
   };
 
-  init();
-  smallScreen.addEventListener('change', init);
+  // ...and only once the demo is near the viewport, so loading the page does
+  // not pay for a maze nobody has scrolled to yet.
+  if ('IntersectionObserver' in window) {
+    const nearby = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      nearby.disconnect();
+      init();
+      smallScreen.addEventListener('change', init);
+    }, { rootMargin: '200px 0px' });
+    nearby.observe(demo);
+  } else {
+    init();
+    smallScreen.addEventListener('change', init);
+  }
 })();
