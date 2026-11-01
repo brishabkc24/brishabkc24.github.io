@@ -104,17 +104,28 @@
     if (el) el.textContent = value;
   };
 
+  // Answers are kept for an hour, so reloading the page does not spend the
+  // network's unsigned allowance (60 requests an hour) again.
+  const CACHE_MS = 60 * 60 * 1000;
   const cacheGet = (key) => {
     try {
-      const raw = sessionStorage.getItem(key);
-      return raw ? JSON.parse(raw) : null;
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const entry = JSON.parse(raw);
+      return entry && Date.now() - entry.at < CACHE_MS ? entry.value : null;
     } catch (_) {
       return null;
     }
   };
   const cacheSet = (key, value) => {
-    try { sessionStorage.setItem(key, JSON.stringify(value)); } catch (_) { /* ignore */ }
+    try { localStorage.setItem(key, JSON.stringify({ at: Date.now(), value })); } catch (_) { /* ignore */ }
   };
+  let quotaLeft = Infinity; // GitHub says how many unsigned requests this network has left
+  const noteQuota = (response) => {
+    const left = Number(response.headers.get('x-ratelimit-remaining'));
+    if (Number.isFinite(left)) quotaLeft = left;
+  };
+  const limited = (response) => response.status === 403 || response.status === 429;
 
   const timeAgo = (iso) => {
     const days = Math.round((Date.now() - new Date(iso).getTime()) / 864e5);
@@ -135,7 +146,8 @@
       `https://api.github.com/users/${GH_USER}/repos?per_page=100&sort=pushed`,
       { headers: GH_HEADERS }
     );
-    if (!response.ok) throw new Error(`GitHub API ${response.status}`);
+    noteQuota(response);
+    if (!response.ok) throw new Error(limited(response) ? 'rate-limited' : `GitHub API ${response.status}`);
     const repos = await response.json();
     cacheSet(key, repos);
     return repos;
@@ -147,11 +159,16 @@
     const cached = cacheGet(key);
     if (cached) return cached;
     const counts = {};
+    // The chart needs one request per repo (more for a busy one); skip it
+    // rather than spend the network's last few requests on it.
+    if (quotaLeft < repos.length + 5) throw new Error('rate-limited');
     for (const repo of repos) {
       for (let page = 1; page <= 5; page++) {
         const url = `https://api.github.com/repos/${repo.full_name}/commits?author=${GH_USER}&since=${sinceIso}&per_page=100&page=${page}`;
         const response = await fetch(url, { headers: GH_HEADERS });
-        if (!response.ok) break; // 409 for an empty repo, 403 when the hour's quota is spent
+        noteQuota(response);
+        if (limited(response)) throw new Error('rate-limited');
+        if (!response.ok) break; // 409 for an empty repo
         const list = await response.json();
         for (const item of list) {
           const day = ((item.commit && item.commit.author && item.commit.author.date) || '').slice(0, 10);
@@ -284,9 +301,28 @@
     fetchCommitDays(repos, since.toISOString()).then(renderCommitChart).catch(() => { /* the chart stays hidden */ });
   }
 
-  fetchRepos().then(renderGitHub).catch(() => {
-    if (ghNote) ghNote.textContent = 'Live stats are unavailable right now. Everything is on my GitHub profile.';
-  });
+  // Without the numbers the tiles would stand empty, so they go, and the note
+  // says why and where the numbers are.
+  const hideGitHub = (reason) => {
+    ['.stats', '.repos__title', '#recent-repos', '.gh-chart'].forEach((selector) => {
+      const el = $(selector);
+      if (el) el.hidden = true;
+    });
+    if (!ghNote) return;
+    ghNote.hidden = false;
+    ghNote.textContent = '';
+    const link = document.createElement('a');
+    link.href = `https://github.com/${GH_USER}`;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = 'my GitHub profile';
+    const text = reason === 'rate-limited'
+      ? 'GitHub allows this network 60 unsigned requests an hour and they are used up, so the live numbers are resting; they are back within the hour. Meanwhile everything is on '
+      : 'The live numbers could not be loaded right now. Everything is on ';
+    ghNote.append(text, link, '.');
+  };
+
+  fetchRepos().then(renderGitHub).catch((error) => hideGitHub(error && error.message));
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
