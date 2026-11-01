@@ -36,6 +36,7 @@
   --bc-hint: oklch(74% 0.14 80);
   --board-max: 560px;
   --range-w: 160px;
+  --text-mail: clamp(1.25rem, 2.2vw + 0.5rem, 2.441rem);
   /* The wash behind the portrait while it loads, the same in either mode. */
   --plate-paper: oklch(96.5% 0.016 82);
   /* The nav slab stays ink in both modes. */
@@ -1124,14 +1125,14 @@ input[type="range"]:focus-visible {
   display: inline-block;
   margin-top: var(--space-xl);
   color: var(--color-paper);
-  font-family: var(--font-display);
-  font-size: var(--text-display-s);
-  font-variation-settings: "opsz" var(--display-optical);
-  line-height: 1.1;
+  font-family: var(--font-outlier);
+  font-size: var(--text-mail);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
   overflow-wrap: anywhere;
   text-decoration-color: var(--color-paper-3);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.12em;
+  text-underline-offset: 0.22em;
 }
 
 .close__mail:hover {
