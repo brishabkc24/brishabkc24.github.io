@@ -6,41 +6,56 @@ projects in the browser instead of just reading about them.
 
 **Live:** https://brishabkc24.github.io
 
-![The home page. "I make algorithms visible", with a breadth-first search rippling across the background.](docs/hero.png)
+![The home page. "I make algorithms visible", with a breadth-first search drawn across the right half of the hero.](docs/hero.png)
 
 ## What is on the page
 
-- **Hero** with a live canvas background. Moving the pointer starts a
-  breadth-first search from the cell under it, and each ring of the flood
-  lights up as it is reached. With `prefers-reduced-motion` it draws one
-  finished search and stays still.
-- **Try one**: my Maze Pathfinding Visualizer, ported to the browser. BFS and
-  A\* race through the same maze side by side, with counters for cells
-  explored and path length, a slider for how many loops the maze has, a speed
-  slider, pause and reset. Under 480px it shows a recording instead.
-- **Play Bagh Chal**: my desktop Bagh Chal game, playable in the browser. Play
-  goats or tigers against the minimax AI at three levels, or two players on one
-  screen, with undo, hints, and a panel that shows exactly how the AI scores
-  the position.
-- **Projects** in a bento grid: Bagh Chal, the Maze Pathfinding Visualizer and
-  Math Tug Arena, with star and fork counts pulled from the GitHub API.
-- **Skills** as chips, **GitHub activity** (stats, the contribution graph and
-  the three most recently pushed repos, live), **About** as a profile card,
-  and a **Contact** panel with email, GitHub, Instagram and Facebook.
+A numbered workflow, hairlines between stages, set in Bodoni Moda over Geist on
+oat paper, with a dark rendering of the same system behind the toggle.
 
-![BFS and A* after a race on the same maze. A* checked 404 cells to BFS's 521; both paths are 76 steps.](docs/demo.png)
+1. **Watch two searches race.** My Maze Pathfinding Visualizer, ported to the
+   browser. BFS and A\* race through the same maze side by side, with counters
+   for cells explored and path length, a slider for how many loops the maze
+   has, a speed slider, pause and reset. Under 480px it shows a recording.
+2. **Play the tigers, or the goats.** My desktop Bagh Chal game, playable in
+   the browser: goats or tigers against the minimax AI at three levels, or two
+   players on one screen, with undo, hints, and a table that shows exactly how
+   the AI scores the position.
+3. **Read the code.** The repos as an index: what each one is, what it is
+   built with, where to get it, with star and fork counts from the GitHub API.
+4. **Follow a year of commits.** A day-by-day chart of my commits drawn from
+   the GitHub API, live figures and the three most recently pushed repos.
+5. **Who builds this.** A small portrait beside the name, three facts, two
+   sentences, then achievements (the CEH course, Bagh Chal 1.1, the Python
+   learning path) and skills as rows.
 
-![Bagh Chal on the page: the wooden board with tigers and goats, the "Tigers win: five goats captured" banner, and the side panel with counts, options and the AI explanation.](docs/baghchal.jpg)
+The hero's canvas is the page's signature. Every search has a goal: the flood
+spreads ring by ring, each ring easing in on the clock with the newest ring in
+the page's one blue, and when it reaches the goal the shortest path is traced
+back in blue, cell by cell. At rest the canvas shows the last finished search
+(to begin with, one from the centre). Move the pointer and a search starts from
+that cell towards a fresh goal; a tap adds another. A caption under the canvas
+reports the cells, rings and steps as it runs. With `prefers-reduced-motion`
+only the resting picture is drawn. The page closes on an email address set
+large.
+
+![BFS and A* after a race on the same maze. A* checked 421 cells to BFS's 525; both paths are 66 steps.](docs/demo.png)
+
+![Bagh Chal on the page, five goats in: the wooden board with tigers and goats, and the side panel with counts, the side and level switches, and the AI explanation.](docs/baghchal.jpg)
 
 ## How it is built
 
 | File | What it does |
 | --- | --- |
 | `index.html` | The page: semantic sections, one `h1`, Open Graph and Twitter tags, a skip link, an inline SVG icon sprite. |
-| `styles.css` | Design tokens as CSS variables; dark by default, light on `[data-theme="light"]`; breakpoints at 1100, 720 and 480px; one layout per section. |
-| `script.js` | Nav, theme toggle (saved in `localStorage`, follows the OS setting until you pick one), scroll reveals, the GitHub API fetch (cached in `sessionStorage`), and the hero canvas. |
+| `tokens.css` | The design tokens: colours in OKLCH, the type scale, spacing, motion, the light block and the dark block derived from it. |
+| `base.css` | The base rules every page shares: reset, container, headings, focus ring, the photograph treatment. |
+| `styles.css` | The page itself: nav, hero, the five stages, the close, the footer, and the breakpoints at 60rem and 480px. Every colour and length goes through a token. |
+| `script.js` | Nav, theme toggle (saved in `localStorage`, follows the OS setting until you pick one), the GitHub API fetch and the commit chart (cached in `sessionStorage`), and the hero canvas. |
 | `demos/maze-race.js` | The maze demo: recursive-backtracker generator, braiding, BFS and A\* as generator functions, and one `requestAnimationFrame` loop that steps both in lockstep. |
-| `demos/bagh-chal.js` | Bagh Chal: the rules engine (neighbour table, placement and movement phases, captures, threefold repetition, undo) and the minimax search with alpha-beta pruning, ported from my Python game, plus the board UI. |
+| `demos/bagh-chal-engine.js` | The Bagh Chal rules engine (neighbour table, placement and movement phases, captures, threefold repetition, undo) and the minimax search with alpha-beta pruning, ported from my Python game. |
+| `demos/bagh-chal-worker.js` | A Web Worker that runs the search off the main thread, so even the Hard level never freezes the page. |
+| `demos/bagh-chal.js` | The Bagh Chal board, controls and the panel that explains the AI's score. |
 | `404.html` | What GitHub Pages serves for unknown paths. |
 
 The page renders fully without JavaScript; the scripts only add the demos and

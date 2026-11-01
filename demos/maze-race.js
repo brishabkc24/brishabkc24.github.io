@@ -384,7 +384,7 @@
 
     showStats(status) {
       this.exploredEl.textContent = String(this.visited);
-      this.pathEl.textContent = this.path ? String(this.path.length - 1) : '–';
+      this.pathEl.textContent = this.path ? String(this.path.length - 1) : '0';
       if (status !== undefined) this.statusEl.textContent = status;
     }
   }
@@ -432,7 +432,7 @@
   const stopRace = () => {
     running = false;
     cancelAnimationFrame(raf);
-    raceButton.textContent = racers().some((panel) => panel.gen) ? 'Resume' : 'Race';
+    raceButton.textContent = finished() ? 'Race again' : racers().some((panel) => panel.gen) ? 'Resume' : 'Race';
   };
 
   const frame = () => {
@@ -442,8 +442,7 @@
     racers().forEach((panel) => panel.showStats());
     if (finished()) {
       stopRace();
-      raceButton.textContent = 'Race';
-      raceButton.disabled = true;
+      raceButton.textContent = 'Race again';
       summarise();
       return;
     }
@@ -451,6 +450,7 @@
   };
 
   const startRace = () => {
+    if (!grid) init(); // a keyboard user can reach Race before the maze is built
     if (finished()) return;
     racers().forEach((panel) => { if (!panel.gen) panel.begin(); });
     running = true;
@@ -458,7 +458,19 @@
     raf = requestAnimationFrame(frame);
   };
 
-  raceButton.addEventListener('click', () => (running ? stopRace() : startRace()));
+  // Race starts, Pause pauses, Resume resumes; once both have finished the
+  // same button clears the search and runs the same maze again.
+  raceButton.addEventListener('click', () => {
+    if (running) {
+      stopRace();
+      return;
+    }
+    if (finished()) {
+      panels.forEach((panel) => panel.setGrid(grid));
+      summary.textContent = '';
+    }
+    startRace();
+  });
 
   const build = () => {
     stopRace();
