@@ -1,6 +1,6 @@
 /* Hallmark · shape: Narrative Workflow · genre: editorial · theme: Specimen (deal 3/3, seed personal-portfolio-brishab-btech-c0ed·15003318·2026-10-31·r0) · redesign: full
  * hero: Banner (56svh, a split inside it: type on five columns, the live search on seven; stage one shows above the fold) · nav: slab · footer: colophon block · imagery: the product live (two search canvases, a game board), two captures of the desktop apps, one photograph (a small portrait of the owner beside the name, in colour, by request) · signature: a breadth-first search that answers the cursor, ink cells with a blue frontier, live in the hero
- * axes: light/high-contrast-serif/cool · posture: restrained · contrast: pass · fold: pass · modes: light+dark · draw: 658f97 · job: hire · v2.0.0 */
+ * axes: light/sans/cool · posture: restrained · contrast: pass · fold: pass · modes: light+dark · draw: 658f97 · job: hire · v2.0.0 */
 /* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V4 · weakest: E, two live demos bring a dozen controls; every control is now the theme's square pair, one filled primary on the whole page */
 /* Hallmark · waive 8 · the sections keep the page's order: race, game, repos, commits, builder, contact · a redesign keeps the content; the composition is new, a numbered workflow on hairlines */
 /* Hallmark · waive 47b · one frame, the Bagh Chal board, the game's own wooden board art · the board is the product and the pieces sit on it */
@@ -16,6 +16,7 @@
 /* Hallmark · dropped 3days · it was the live "pushed 3 days ago" line from the GitHub API, which changes every day */
 /* Hallmark · hero-review: fix · 4 findings · 4 resolved (the resting search drawn for everyone, the diamond held at every size, stage one above the 1280 fold, the posture named truthfully) */
 /* Hallmark · finish-review: subagent · 7 findings · 7 resolved (the portrait's duotone pinned to ink on oat in both modes; the chart and the phone recording in the page's blue; the diamond capped one ring inside the shorter edge; a page noun in every stage head; the chart scrolls at its own size on a phone; the captures keep their proportions on six columns) · gap: none */
+/* Hallmark · owner override · one face: Geist for display, body and figures, the hairline serif was unclear on the owner's screen · dark mode: black paper, and the close band stays dark instead of flipping light */
 @import url("./tokens.css");
 @import url("./base.css");
 
@@ -37,14 +38,48 @@
   --board-max: 560px;
   --range-w: 160px;
   --text-mail: clamp(1.25rem, 2.2vw + 0.5rem, 2.441rem);
+  --close-bg: var(--color-ink);
+  --close-edge: var(--color-ink);
+  --close-fg: var(--color-paper);
+  --close-fg-2: var(--color-paper-2);
+  --close-fg-3: var(--color-paper-3);
+  --close-rule: var(--color-ink-2);
   /* The wash behind the portrait while it loads, the same in either mode. */
   --plate-paper: oklch(96.5% 0.016 82);
   /* The nav slab stays ink in both modes. */
   --nav-ink: oklch(17% 0.012 60);
   --nav-ink-2: oklch(28% 0.014 60);
+  --nav-edge: var(--nav-ink);
   --nav-paper: oklch(96.5% 0.016 82);
   --nav-paper-2: oklch(93.5% 0.02 80);
   --nav-paper-3: oklch(89% 0.024 78);
+}
+
+/* Dark: the page goes black, the nav slab with it, and the close band stays dark */
+:root[data-theme="dark"] {
+  --close-bg: var(--color-paper);
+  --close-edge: var(--color-rule);
+  --close-fg: var(--color-ink);
+  --close-fg-2: var(--color-ink-2);
+  --close-fg-3: var(--color-muted);
+  --close-rule: var(--color-rule);
+  --nav-ink: oklch(11% 0.008 70);
+  --nav-ink-2: oklch(19.5% 0.014 70);
+  --nav-edge: oklch(30% 0.014 70);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --close-bg: var(--color-paper);
+    --close-edge: var(--color-rule);
+    --close-fg: var(--color-ink);
+    --close-fg-2: var(--color-ink-2);
+    --close-fg-3: var(--color-muted);
+    --close-rule: var(--color-rule);
+    --nav-ink: oklch(11% 0.008 70);
+    --nav-ink-2: oklch(19.5% 0.014 70);
+    --nav-edge: oklch(30% 0.014 70);
+  }
 }
 
 /* ----- Base ---------------------------------------------------------- */
@@ -212,6 +247,7 @@ input[type="range"]:focus-visible {
   top: 0;
   z-index: var(--z-sticky-nav);
   background: var(--nav-ink);
+  border-bottom: var(--rule-hair) solid var(--nav-edge);
   color: var(--nav-paper);
 }
 
@@ -221,7 +257,7 @@ input[type="range"]:focus-visible {
 }
 
 .close :focus-visible {
-  outline-color: var(--color-paper);
+  outline-color: var(--close-fg);
 }
 
 .nav {
@@ -1108,8 +1144,9 @@ input[type="range"]:focus-visible {
 /* ----- The close: the ink band ---------------------------------------------- */
 .close {
   padding-block: var(--section-gap-s);
-  background: var(--color-ink);
-  color: var(--color-paper);
+  border-top: var(--rule-hair) solid var(--close-edge);
+  background: var(--close-bg);
+  color: var(--close-fg);
 }
 
 .close h2 {
@@ -1118,19 +1155,19 @@ input[type="range"]:focus-visible {
 
 .close .lead {
   margin-top: var(--space-lg);
-  color: var(--color-paper-2);
+  color: var(--close-fg-2);
 }
 
 .close__mail {
   display: inline-block;
   margin-top: var(--space-xl);
-  color: var(--color-paper);
+  color: var(--close-fg);
   font-family: var(--font-outlier);
   font-size: var(--text-mail);
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
   overflow-wrap: anywhere;
-  text-decoration-color: var(--color-paper-3);
+  text-decoration-color: var(--close-fg-3);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.22em;
 }
@@ -1145,7 +1182,7 @@ input[type="range"]:focus-visible {
   gap: var(--space-lg);
   margin: var(--space-xl) 0 0;
   padding: var(--space-lg) 0 0;
-  border-top: var(--rule-hair) solid var(--color-ink-2);
+  border-top: var(--rule-hair) solid var(--close-rule);
   list-style: none;
 }
 
@@ -1153,12 +1190,12 @@ input[type="range"]:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  color: var(--color-paper-2);
-  text-decoration-color: var(--color-paper-3);
+  color: var(--close-fg-2);
+  text-decoration-color: var(--close-fg-3);
 }
 
 .close__links a:hover {
-  color: var(--color-paper);
+  color: var(--close-fg);
 }
 
 .close__links svg {

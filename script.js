@@ -61,7 +61,7 @@
 
   const applyTheme = (theme) => {
     root.dataset.theme = theme;
-    if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#211d18' : '#f7f1e5');
+    if (themeMeta) themeMeta.setAttribute('content', theme === 'dark' ? '#060403' : '#f7f1e5');
     if (themeButton) {
       const label = `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`;
       themeButton.setAttribute('aria-label', label);

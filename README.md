@@ -10,7 +10,7 @@ projects in the browser instead of just reading about them.
 
 ## What is on the page
 
-A numbered workflow, hairlines between stages, set in Bodoni Moda over Geist on
+A numbered workflow, hairlines between stages, set in Geist throughout on
 oat paper, with a dark rendering of the same system behind the toggle.
 
 1. **Watch two searches race.** My Maze Pathfinding Visualizer, ported to the

@@ -14,11 +14,11 @@
   --color-rule: oklch(80% 0.018 75); --color-rule-2: oklch(66% 0.02 72);
   --color-accent: oklch(45% 0.18 262); --color-accent-ink: oklch(97% 0.012 82); --color-focus: oklch(50% 0.18 262);
   --color-guide: oklch(55% 0.16 262 / 0.5);
-  --font-display: "Bodoni Moda", ui-serif, Georgia, serif; --font-body: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-outlier: "Geist Mono", ui-monospace, monospace;
+  --font-display: "Geist", ui-sans-serif, system-ui, sans-serif; --font-body: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-outlier: "Geist", ui-sans-serif, system-ui, sans-serif;
   --radius-card: 0; --radius-pill: 0; --rule-hair: 1px;
   --shadow-card: none;
-  --tracking-display: -0.02em; --display-weight: 400; --display-optical: 96;
+  --tracking-display: -0.02em; --display-weight: 500; --display-optical: 96;
 }
 
 /* Dark mode: the same system re-derived, never inverted (dark-mode.md). The
@@ -26,10 +26,10 @@
    not been set. The anchor hues (oat 82, ink blue 262) never move. */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-paper: oklch(15% 0.012 70); --color-paper-2: oklch(18.5% 0.014 70); --color-paper-3: oklch(22% 0.016 70);
+  --color-paper: oklch(11% 0.008 70); --color-paper-2: oklch(15% 0.012 70); --color-paper-3: oklch(19.5% 0.014 70);
   --color-ink: oklch(94% 0.012 82); --color-ink-2: oklch(84% 0.012 80); --color-muted: oklch(70% 0.012 75);
-  --color-rule: oklch(32% 0.014 70); --color-rule-2: oklch(46% 0.016 70);
-  --color-accent: oklch(70% 0.14 262); --color-accent-ink: oklch(15% 0.012 70); --color-focus: oklch(72% 0.15 262);
+  --color-rule: oklch(30% 0.014 70); --color-rule-2: oklch(44% 0.016 70);
+  --color-accent: oklch(70% 0.14 262); --color-accent-ink: oklch(11% 0.008 70); --color-focus: oklch(72% 0.15 262);
   --color-guide: oklch(70% 0.14 262 / 0.5);
   --color-error: oklch(70% 0.17 27); --color-success: oklch(72% 0.13 150);
 }
@@ -37,10 +37,10 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     color-scheme: dark;
-    --color-paper: oklch(15% 0.012 70); --color-paper-2: oklch(18.5% 0.014 70); --color-paper-3: oklch(22% 0.016 70);
+    --color-paper: oklch(11% 0.008 70); --color-paper-2: oklch(15% 0.012 70); --color-paper-3: oklch(19.5% 0.014 70);
     --color-ink: oklch(94% 0.012 82); --color-ink-2: oklch(84% 0.012 80); --color-muted: oklch(70% 0.012 75);
-    --color-rule: oklch(32% 0.014 70); --color-rule-2: oklch(46% 0.016 70);
-    --color-accent: oklch(70% 0.14 262); --color-accent-ink: oklch(15% 0.012 70); --color-focus: oklch(72% 0.15 262);
+    --color-rule: oklch(30% 0.014 70); --color-rule-2: oklch(44% 0.016 70);
+    --color-accent: oklch(70% 0.14 262); --color-accent-ink: oklch(11% 0.008 70); --color-focus: oklch(72% 0.15 262);
     --color-guide: oklch(70% 0.14 262 / 0.5);
     --color-error: oklch(70% 0.17 27); --color-success: oklch(72% 0.13 150);
   }
